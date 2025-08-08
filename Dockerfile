@@ -21,7 +21,6 @@ RUN npm run build
 
 # Estágio de Produção
 # -----------------------------------------------------------------------------
-# Usa uma imagem Node.js mais leve, apenas com o que é necessário para rodar.
 FROM node:18-alpine AS production
 
 # Define o diretório de trabalho.
@@ -33,14 +32,12 @@ COPY --from=builder /usr/src/app/package*.json ./
 # Instala SOMENTE as dependências de produção.
 RUN npm install --omit=dev
 
-# Copia os arquivos de build (a pasta `dist`) do estágio de build.
+# Copia a pasta de build (`dist`) inteira do estágio de build.
+# O arquivo 'main.js' já estará dentro desta pasta.
 COPY --from=builder /usr/src/app/dist ./dist
-
-# Copia outros arquivos necessários para a produção (ex: `main.js`, `ormconfig.ts`).
-COPY --from=builder /usr/src/app/main.js ./main.js
 
 # Exponha a porta que a sua aplicação NestJS usa.
 EXPOSE 3000
 
-# Define o comando para iniciar a aplicação em produção.
+# Define o comando para iniciar a aplicação em produção a partir da pasta 'dist'.
 CMD ["node", "dist/main.js"]
