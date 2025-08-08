@@ -38,13 +38,13 @@ services:
   
   clube-estilo-api:
     build:
-      context: ./clube-estilo-api  # Path to the directory with your NestJS app and Dockerfile
+      context: .  # Path to the directory with your NestJS app and Dockerfile
       dockerfile: Dockerfile
     container_name: clube-estilo-api
     ports:
       - '3000:3000' # Map your NestJS port
     env_file:
-      - ./clube-estilo-api/.env # Path to your NestJS .env file
+      - ./.env # Path to your NestJS .env file
     networks:
       - postgres
     depends_on:
