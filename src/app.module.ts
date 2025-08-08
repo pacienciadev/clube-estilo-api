@@ -21,7 +21,6 @@ import { ProductModule } from './modules/product/product.module';
 
 import { GlobalExceptionFilter } from './utils/filters/global-exception-filter';
 import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.interceptor';
-import { TarotModule } from './modules/tarot/tarot.module';
 
 @Module({
   imports: [
@@ -41,7 +40,6 @@ import { TarotModule } from './modules/tarot/tarot.module';
     }),
     AuthModule,
     UserModule,
-    TarotModule,
     OrderModule,
     ProductModule,
   ],

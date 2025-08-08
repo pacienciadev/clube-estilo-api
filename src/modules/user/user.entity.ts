@@ -11,7 +11,6 @@ import {
 import { Exclude } from 'class-transformer';
 
 import { OrderEntity } from '../order/order.entity';
-import { TarotEntity } from '../tarot/tarot.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -39,9 +38,4 @@ export class UserEntity {
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];
-
-  @OneToMany(() => TarotEntity, (tarot) => tarot.user, {
-    cascade: true,
-  })
-  tarotGames: TarotEntity[];
 }
