@@ -8,9 +8,6 @@ import {
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { CacheModule } from '@nestjs/cache-manager';
-
-import { redisStore } from 'cache-manager-redis-yet';
 
 import { PostgresConfigService } from './config/postgres.config.service';
 
@@ -31,12 +28,6 @@ import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.inte
     TypeOrmModule.forRootAsync({
       useClass: PostgresConfigService,
       inject: [PostgresConfigService],
-    }),
-    CacheModule.registerAsync({
-      useFactory: async () => ({
-        store: await redisStore({ ttl: 10 * 1000 }),
-      }),
-      isGlobal: true,
     }),
     AuthModule,
     UserModule,

@@ -1,7 +1,7 @@
 # Estágio de Build
 # -----------------------------------------------------------------------------
 # Usa uma imagem Node.js completa para construir a aplicação.
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Define o diretório de trabalho.
 WORKDIR /usr/src/app
@@ -21,7 +21,7 @@ RUN npm run build
 
 # Estágio de Produção
 # -----------------------------------------------------------------------------
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 # Define o diretório de trabalho.
 WORKDIR /usr/src/app
@@ -31,6 +31,8 @@ COPY --from=builder /usr/src/app/package*.json ./
 
 # Instala SOMENTE as dependências de produção.
 RUN npm install --omit=dev
+
+COPY --from=builder /usr/src/app/src ./src
 
 # Copia a pasta de build (`dist`) inteira do estágio de build.
 # O arquivo 'main.js' já estará dentro desta pasta.
