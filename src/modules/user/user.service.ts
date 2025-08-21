@@ -54,12 +54,14 @@ export class UserService {
   async updateUser(id: string, newData: UpdateUserDTO) {
     const user = await this.userRepository.findOneBy({ id });
 
+    console.log(' UserService | updateUser | user:', user);
+
     if (user === null)
       throw new NotFoundException('O usuário não foi encontrado.');
 
     Object.assign(user, newData as UserEntity);
 
-    return this.userRepository.save(user);
+    return this.userRepository.update(user.id, user);
   }
 
   async deleteUser(id: string) {

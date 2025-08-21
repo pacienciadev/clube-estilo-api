@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -13,6 +14,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UserListDTO } from './dto/user-list.dto';
 import { HashPasswordPipe } from 'src/pipes/password-hash-transform.pipe';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('/users')
 export class UserController {
@@ -35,6 +37,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   async usersList() {
     const savedUsers = await this.userService.usersList();
 
@@ -44,7 +47,16 @@ export class UserController {
     };
   }
 
+  @Get('/:id')
+  @UseGuards(AuthGuard)
+  async userDetails(@Param('id') id: string) {
+    const user = await this.userService.searchById(id);
+
+    return new UserListDTO(user.id, user.name);
+  }
+
   @Put('/:id')
+  @UseGuards(AuthGuard)
   async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
     const updatedUser = await this.userService.updateUser(id, newData);
 
@@ -55,6 +67,7 @@ export class UserController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   async removeUser(@Param('id') id: string) {
     const removedUser = await this.userService.deleteUser(id);
 

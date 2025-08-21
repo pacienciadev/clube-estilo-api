@@ -16,9 +16,12 @@ export class HashPasswordPipe implements PipeTransform {
       throw new Error('Password must be at least 6 characters long');
     }
 
-    const salt = this.configService.get<string>('SALT_PASSWORD');
+    const bcryptSaltRounds =
+      this.configService.get<string>('BCRYPT_SALT_ROUNDS');
 
-    const hashedPassword = await bcrypt.hash(password, salt!);
+    const saltRounds = Number(bcryptSaltRounds);
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     return hashedPassword;
   }

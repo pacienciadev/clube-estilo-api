@@ -36,12 +36,11 @@ services:
     ports:
       - '3000:3000' # Map your NestJS port
     env_file:
-      - .env # Path to your NestJS .env file
+      - ./.env # Path to your NestJS .env file
     networks:
       - postgres
     depends_on:
       - postgres
-    restart: always
     command: ["sh", "-c", "npm run migration:run && npm run start:prod"]
 
 networks:

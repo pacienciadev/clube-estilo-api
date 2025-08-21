@@ -1,4 +1,3 @@
-import { CacheInterceptor } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
@@ -7,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  UseInterceptors,
 } from '@nestjs/common';
 
 import { ProductService } from './product.service';
@@ -29,13 +27,11 @@ export class ProductController {
   }
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
   async listAll() {
     return this.productService.listProducts();
   }
 
   @Get('/:id')
-  @UseInterceptors(CacheInterceptor)
   async listOne(@Param('id') id: string) {
     const savedProduct = await this.productService.listOneProduct(id);
 

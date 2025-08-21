@@ -14,8 +14,6 @@ export class HasUniqueEmailValidator implements ValidatorConstraintInterface {
   constructor(private userService: UserService) {}
 
   async validate(value: string): Promise<boolean> {
-    console.log('1.' + !!this.userService);
-
     try {
       const userHasEmail = await this.userService.searchByEmail(value);
 
