@@ -10,11 +10,14 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
-    ports:
-      - '5432:5432'
     networks:
       - postgres
     restart: unless-stopped
+    healthcheck: # Garante que o banco está pronto antes da API iniciar
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4
@@ -27,6 +30,7 @@ services:
       - postgres
     networks:
       - postgres
+    restart: unless-stopped
 
   clube-estilo-api:
     build:
@@ -40,8 +44,10 @@ services:
     networks:
       - postgres
     depends_on:
-      - postgres
+      postgres: # Depende do serviço 'postgres' estar saudável
+        condition: service_healthy
     command: ["sh", "-c", "npm run migration:run && npm run start:prod"]
+    restart: unless-stopped
 
 networks:
   postgres:
