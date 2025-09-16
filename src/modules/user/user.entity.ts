@@ -11,6 +11,8 @@ import {
 import { Exclude } from 'class-transformer';
 
 import { OrderEntity } from '../order/order.entity';
+import { AffiliationEntity } from '../affiliation/affiliation.entity';
+import { IndividualAddressEntity } from '../address/individual/individual-address.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -35,6 +37,13 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  // tipo_filiacao;
+  @OneToMany(() => AffiliationEntity, (affiliation) => affiliation.user)
+  affiliations: AffiliationEntity[];
+
+  @OneToMany(() => IndividualAddressEntity, (address) => address.user)
+  addresses: IndividualAddressEntity[];
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];

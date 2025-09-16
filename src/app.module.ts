@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import {
   ClassSerializerInterceptor,
@@ -11,13 +12,15 @@ import { ConfigModule } from '@nestjs/config';
 
 import { PostgresConfigService } from './config/postgres.config.service';
 
+import { GlobalExceptionFilter } from './utils/filters/global-exception-filter';
+import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.interceptor';
+
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
-
-import { GlobalExceptionFilter } from './utils/filters/global-exception-filter';
-import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.interceptor';
+import { AffiliationModule } from './modules/affiliation/affiliation.module';
+import { PrismaService } from './config/prisma.service';
 
 @Module({
   imports: [
@@ -33,8 +36,10 @@ import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.inte
     UserModule,
     OrderModule,
     ProductModule,
+    AffiliationModule,
   ],
   providers: [
+    PrismaService,
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,

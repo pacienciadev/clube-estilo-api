@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+  affiliations Affiliation[]
+  orders       Order[]
+}
+
+model Affiliation {
+  id          String @id @default(uuid())
+  affiliation String
+  userId      String @map("user_id")
+  user        User   @relation(fields: [userId], references: [id])
+}
+
+model AffiliationCategories {
+  id          String @id @default(uuid())
+  description String @unique
+}
+
+model IndividualAddress {
+  id         String    @id @default(uuid())
+  street     String
+  number     String
+  complement String?
+  city       String
+  state      String
+  zipCode    String    @map("zip_code")
+  country    String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+}
+
+model LegalEntityAddress {
+  id         String    @id @default(uuid())
+  street     String
+  number     String
+  complement String?
+  city       String
+  state      String
+  zipCode    String    @map("zip_code")
+  country    String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+}
+
+model Order {
+  id           String        @id @default(uuid())
+  totalValue   Float         @map("total_value")
+  status       String
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+  userId       String        @map("user_id")
+  itemRequests ItemRequest[]
+  user         User          @relation(fields: [userId], references: [id])
+}
+
+model ItemRequest {
+  id        String  @id @default(uuid())
+  amount    Int
+  salePrice Float   @map("sale_price")
+  onDelete  Boolean @map("on_delete")
+  onUpdate  Boolean @map("on_update")
+  orderId   String  @map("order_id")
+  order     Order   @relation(fields: [orderId], references: [id])
+}
