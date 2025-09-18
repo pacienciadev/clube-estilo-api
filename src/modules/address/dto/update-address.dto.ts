@@ -5,5 +5,6 @@ export class UpdateAddressDto {
   city?: string;
   state?: string;
   zipCode?: string;
+  inUse: boolean;
   country?: string;
 }

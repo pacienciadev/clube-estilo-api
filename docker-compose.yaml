@@ -3,6 +3,7 @@ version: '3.5'
 services:
   postgres:
     image: postgres:latest
+    container_name: clube_estilo_postgres
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
@@ -28,6 +29,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
     ports:
       - '8081:80'
+    volumes:
+    - ./pgadmin-data:/var/lib/pgadmin
     depends_on:
       - postgres
     networks:

@@ -15,6 +15,7 @@ import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { TokenUserIdType } from 'src/types';
 
 @UseGuards(AuthGuard)
 @Controller('/user/address')
@@ -23,7 +24,7 @@ export class AddressController {
 
   @Post()
   async createAddress(
-    @Req() req: { user: { sub: string } },
+    @Req() req: TokenUserIdType,
     @Body() addressData: CreateAddressDto,
   ) {
     const userId = req.user.sub;
@@ -32,7 +33,7 @@ export class AddressController {
   }
 
   @Get()
-  async getAddresses(@Req() req: { user: { sub: string } }) {
+  async getAddresses(@Req() req: TokenUserIdType) {
     const userId = req.user.sub;
 
     return this.addressService.getAddresses(userId);
@@ -48,7 +49,7 @@ export class AddressController {
 
   @Put(':addressId')
   async updateAddress(
-    @Req() req: { user: { sub: string } },
+    @Req() req: TokenUserIdType,
     @Param('addressId') addressId: string,
     @Body() addressData: UpdateAddressDto,
   ) {
@@ -59,7 +60,7 @@ export class AddressController {
 
   @Delete(':addressId')
   async deleteAddress(
-    @Req() req: { user: { sub: string } },
+    @Req() req: TokenUserIdType,
     @Param('addressId') addressId: string,
   ) {
     const userId = req.user.sub;
@@ -67,3 +68,4 @@ export class AddressController {
     return this.addressService.deleteAddress(userId, addressId);
   }
 }
+
