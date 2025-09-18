@@ -22,6 +22,9 @@ export class CreateAddressDto {
   @IsNotEmpty({ message: 'O campo "CEP" não pode ser vazio' })
   zipCode: string;
 
+  @IsNotEmpty({ message: 'O campo "em uso" não pode ser vazio' })
+  inUse: boolean;
+
   @IsNotEmpty({ message: 'O campo "país" não pode ser vazio' })
   country: string;
 }

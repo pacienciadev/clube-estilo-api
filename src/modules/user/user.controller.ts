@@ -15,10 +15,14 @@ import { UserListDTO } from './dto/user-list.dto';
 import { HashPasswordPipe } from 'src/pipes/password-hash-transform.pipe';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('/users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   @Post()
   async criaUsuario(
@@ -33,6 +37,10 @@ export class UserController {
     return {
       message: 'Usuário criado com sucesso.',
       user: new UserListDTO(createdUser.id, createdUser.name),
+      access_token: await this.jwtService.signAsync({
+        sub: createdUser.id,
+        userName: createdUser.name,
+      }),
     };
   }
 
