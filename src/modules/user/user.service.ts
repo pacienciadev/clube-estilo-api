@@ -20,6 +20,7 @@ export class UserService {
 
     return this.userRepository.save(userEntity);
   }
+  
   async usersList(): Promise<UserListDTO[]> {
     const users = await this.userRepository.find();
     const userList: UserListDTO[] = users.map(
