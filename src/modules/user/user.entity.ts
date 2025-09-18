@@ -11,6 +11,7 @@ import {
 import { Exclude } from 'class-transformer';
 
 import { OrderEntity } from '../order/order.entity';
+import { AddressEntity } from '../address/address.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -27,6 +28,12 @@ export class UserEntity {
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
 
+  @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user)
+  addresses: AddressEntity[];
+
+  @OneToMany(() => OrderEntity, (order: OrderEntity) => order.user)
+  orders: OrderEntity[];
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
 
@@ -35,7 +42,4 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
-
-  @OneToMany(() => OrderEntity, (order) => order.user)
-  orders: OrderEntity[];
 }
