@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
 } from 'typeorm';
+
 import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'addresses' })
@@ -11,6 +12,9 @@ export class AddressEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ name: 'description', length: 255, nullable: true })
+  description: string;
+  
   @Column({ name: 'street', length: 255, nullable: false })
   street: string;
 
