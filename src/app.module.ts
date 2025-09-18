@@ -18,6 +18,7 @@ import { ProductModule } from './modules/product/product.module';
 
 import { GlobalExceptionFilter } from './utils/filters/global-exception-filter';
 import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.interceptor';
+import { AddressModule } from './modules/address/address.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.inte
     }),
     AuthModule,
     UserModule,
+    AddressModule,
     OrderModule,
     ProductModule,
   ],

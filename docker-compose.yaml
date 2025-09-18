@@ -12,9 +12,11 @@ services:
       - postgres:/data/postgres
     networks:
       - postgres
+    # ports:
+    #   - '5432:5432' # Uncomment if you want to access Postgres from host machine
     restart: unless-stopped
     healthcheck: # Garante que o banco está pronto antes da API iniciar
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,7 +48,7 @@ services:
     depends_on:
       postgres: # Depende do serviço 'postgres' estar saudável
         condition: service_healthy
-    command: ["sh", "-c", "npm run migration:run && npm run start:prod"]
+    command: ['sh', '-c', 'npm run migration:run && npm run start:prod']
     restart: unless-stopped
 
 networks:
