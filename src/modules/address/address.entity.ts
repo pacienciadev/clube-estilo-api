@@ -32,8 +32,6 @@ export class AddressEntity {
   @Column({ name: 'country', length: 100, nullable: false })
   country: string;
 
-  @ManyToOne(() => UserEntity, (user: UserEntity) => user.addresses, {
-    cascade: true,
-  })
+  @ManyToOne(() => UserEntity, (user: UserEntity) => user.addresses)
   user: UserEntity;
 }
