@@ -6,29 +6,35 @@ import {
   Param,
   Post,
   Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 
 import { AddressService } from './address.service';
 
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
-@Controller('/users/:id/addresses')
+@UseGuards(AuthGuard)
+@Controller('/user/address')
 export class AddressController {
-  constructor(
-    private readonly addressService: AddressService,
-  ) {}
+  constructor(private readonly addressService: AddressService) {}
 
   @Post()
   async createAddress(
-    @Param('id') userId: string,
+    @Req() req: { user: { sub: string } },
     @Body() addressData: CreateAddressDto,
   ) {
+    const userId = req.user.sub;
+
     return this.addressService.createAddress(userId, addressData);
   }
 
   @Get()
-  async getAddresses(@Param('id') userId: string) {
+  async getAddresses(@Req() req: { user: { sub: string } }) {
+    const userId = req.user.sub;
+
     return this.addressService.getAddresses(userId);
   }
 
@@ -42,22 +48,22 @@ export class AddressController {
 
   @Put(':addressId')
   async updateAddress(
-    @Param('id') userId: string,
+    @Req() req: { user: { sub: string } },
     @Param('addressId') addressId: string,
     @Body() addressData: UpdateAddressDto,
   ) {
-    return this.addressService.updateAddress(
-      userId,
-      addressId,
-      addressData,
-    );
+    const userId = req.user.sub;
+
+    return this.addressService.updateAddress(userId, addressId, addressData);
   }
 
   @Delete(':addressId')
   async deleteAddress(
-    @Param('id') userId: string,
+    @Req() req: { user: { sub: string } },
     @Param('addressId') addressId: string,
   ) {
+    const userId = req.user.sub;
+
     return this.addressService.deleteAddress(userId, addressId);
   }
 }

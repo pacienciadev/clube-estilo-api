@@ -28,7 +28,9 @@ export class UserEntity {
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
 
-  @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user)
+  @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user, {
+    cascade: true,
+  })
   addresses: AddressEntity[];
 
   @OneToMany(() => OrderEntity, (order: OrderEntity) => order.user)

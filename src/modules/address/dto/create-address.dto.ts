@@ -1,12 +1,15 @@
 import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateAddressDto {
+  @IsOptional()
+  description?: string;
+
   @IsNotEmpty({ message: 'O campo "rua" não pode ser vazio' })
   street: string;
 
   @IsNotEmpty({ message: 'O campo "número" não pode ser vazio' })
   number: string;
-  
+
   @IsOptional()
   complement?: string;
 

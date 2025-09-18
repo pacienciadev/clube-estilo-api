@@ -39,16 +39,16 @@ export class AddressService {
   }
 
   async getAddresses(userId: string) {
-    await this.findUser(userId);
+    const user = await this.findUser(userId);
 
-    return this.addressRepository.find({ where: { user: { id: userId } } });
+    return this.addressRepository.find({ where: { user: { id: user.id } } });
   }
 
   async getAddress(userId: string, addressId: string) {
     const user = await this.findUser(userId);
 
     return this.addressRepository.findOne({
-      where: { id: addressId, user },
+      where: { id: addressId, user: { id: user.id } },
     });
   }
 
@@ -59,17 +59,27 @@ export class AddressService {
   ) {
     const user = await this.findUser(userId);
 
-    await this.addressRepository.update(
+    const updateResult = await this.addressRepository.update(
       { id: addressId, user },
       addressData,
     );
+
+    if (updateResult.affected === 0) {
+      throw new NotFoundException(
+        'Endereço não encontrado ou não pertence ao usuário',
+      );
+    }
+
     return this.getAddress(userId, addressId);
   }
 
   async deleteAddress(userId: string, addressId: string) {
     const address = await this.getAddress(userId, addressId);
-    if (address) {
-      await this.addressRepository.remove(address);
+
+    if (!address) {
+      throw new NotFoundException('O endereço não foi encontrado');
     }
+
+    await this.addressRepository.remove(address);
   }
 }
