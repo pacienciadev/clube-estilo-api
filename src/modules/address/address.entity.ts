@@ -1,9 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { UserEntity } from '../user/user.entity';
 
@@ -12,7 +7,7 @@ export class AddressEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'description', length: 255, nullable: true })
+  @Column({ name: 'description', length: 255 })
   description: string;
 
   @Column({ name: 'street', length: 255, nullable: false })
@@ -36,7 +31,7 @@ export class AddressEntity {
   @Column({ name: 'country', length: 100, nullable: false })
   country: string;
 
-  @Column({ name: 'inUse', nullable: true, default: false })
+  @Column({ name: 'inUse' })
   inUse: boolean;
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.addresses)
