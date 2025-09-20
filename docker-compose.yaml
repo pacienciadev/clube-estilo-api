@@ -4,18 +4,19 @@ services:
   postgres:
     image: postgres:latest
     container_name: clube_estilo_postgres
-    env_file:
-      - ./.env
     environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /data/postgres
     volumes:
-      - postgres_data:/data/postgres
+      - postgres:/data/postgres
     networks:
       - postgres
     ports:
-      - '5432:5432'
+      - '5432:5432' # Uncomment if you want to access Postgres from host machine
     restart: unless-stopped
-    healthcheck:
+    healthcheck: # Garante que o banco está pronto antes da API iniciar
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}']
       interval: 10s
       timeout: 5s
@@ -23,8 +24,9 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    env_file:
-      - ./.env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
     ports:
       - '8081:80'
     volumes:
@@ -37,19 +39,19 @@ services:
 
   clube-estilo-api:
     build:
-      context: .
+      context: . # Path to the directory with your NestJS app and Dockerfile
       dockerfile: Dockerfile
     container_name: clube-estilo-api
     ports:
-      - '3000:3000'
+      - '3000:3000' # Map your NestJS port
     env_file:
-      - ./.env
+      - ./.env # Path to your NestJS .env file
     networks:
       - postgres
     depends_on:
-      postgres:
+      postgres: # Depende do serviço 'postgres' estar saudável
         condition: service_healthy
-    command: ['sh', '-c', 'sleep 10 && npm run migration:run && npm run start:prod']
+    command: ['sh', '-c', 'sleep 5 && npm run migration:run && npm run start:prod']
     restart: unless-stopped
 
 networks:
@@ -57,4 +59,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  postgres:
