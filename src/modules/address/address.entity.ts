@@ -36,7 +36,7 @@ export class AddressEntity {
   @Column({ name: 'country', length: 100, nullable: false })
   country: string;
 
-  @Column({ name: 'inUse', nullable: false, default: false })
+  @Column({ name: 'inUse', nullable: true, default: false })
   inUse: boolean;
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.addresses)
