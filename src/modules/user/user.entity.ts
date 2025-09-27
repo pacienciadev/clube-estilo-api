@@ -28,6 +28,34 @@ export class UserEntity {
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
 
+  @Column({ name: 'phone', length: 15, nullable: true })
+  phone: string;
+
+  @Column({ name: 'bornDate', type: 'date', nullable: true })
+  bornDate: Date;
+
+  @Column({
+    name: 'gender',
+    type: 'enum',
+    enum: ['MALE', 'FEMALE', 'OTHER'],
+    default: 'OTHER',
+  })
+  gender: string;
+
+  @Column({
+    name: 'affiliation',
+    type: 'enum',
+    enum: [
+      'USER',
+      'CE_ADMIN',
+      'SERVICE_PROVIDER',
+      'SUPER_ADMIN',
+      'SERVICE_PROVIDER_MANAGER',
+    ],
+    default: 'USER',
+  })
+  affiliation: string;
+
   @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user, {
     cascade: true,
   })

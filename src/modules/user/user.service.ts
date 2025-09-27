@@ -52,6 +52,17 @@ export class UserService {
     return user;
   }
 
+  async searchByCelphone(phone: string) {
+    const user = await this.userRepository.findOne({
+      where: { phone },
+    });
+
+    if (user === null)
+      throw new NotFoundException('O telefone não foi encontrado.');
+
+    return user;
+  }
+
   async updateUser(id: string, newData: UpdateUserDTO) {
     const user = await this.userRepository.findOneBy({ id });
 
