@@ -55,7 +55,7 @@ export class AddressService {
   async updateAddress(
     userId: string,
     addressId: string,
-    addressData: UpdateAddressDto,
+    addressData: Partial<UpdateAddressDto>,
   ) {
     const user = await this.findUser(userId);
 
@@ -81,5 +81,25 @@ export class AddressService {
     }
 
     await this.addressRepository.remove(address);
+  }
+
+  async defaultAddress(
+    userId: string,
+    addressId: string,
+  ) {
+    const user = await this.findUser(userId);
+
+    const updateResult = await this.addressRepository.update(
+      { id: addressId, user },
+      { inUse: true },
+    );
+
+    if (updateResult.affected === 0) {
+      throw new NotFoundException(
+        'Endereço não encontrado ou não pertence ao usuário',
+      );
+    }
+
+    return this.getAddress(userId, addressId);
   }
 }

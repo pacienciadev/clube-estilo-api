@@ -20,11 +20,25 @@ export class UserService {
 
     return this.userRepository.save(userEntity);
   }
-  
+
   async usersList(): Promise<UserListDTO[]> {
     const users = await this.userRepository.find();
     const userList: UserListDTO[] = users.map(
-      (user) => new UserListDTO(user.id, user.name),
+      (user) =>
+        new UserListDTO(
+          user.id,
+          user.name,
+          user.email,
+          user.phone,
+          user.cpf,
+          user.birthDate,
+          user.gender,
+          user.addresses,
+          user.affiliation,
+          user.createdAt,
+          user.updatedAt,
+          user.deletedAt,
+        ),
     );
 
     return userList;
@@ -59,6 +73,18 @@ export class UserService {
 
     if (user === null)
       throw new NotFoundException('O telefone não foi encontrado.');
+
+    return user;
+  }
+
+  async searchByCPF(cpf: string) {
+    console.log(cpf);
+
+    const user = await this.userRepository.findOne({
+      where: { cpf },
+    });
+
+    if (user === null) throw new NotFoundException('O CPF não foi encontrado.');
 
     return user;
   }

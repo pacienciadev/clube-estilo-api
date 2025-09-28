@@ -51,11 +51,29 @@ export class AddressController {
   async updateAddress(
     @Req() req: TokenUserIdType,
     @Param('addressId') addressId: string,
-    @Body() addressData: UpdateAddressDto,
+    @Body() addressData: Partial<UpdateAddressDto>,
   ) {
     const userId = req.user.sub;
 
     return this.addressService.updateAddress(userId, addressId, addressData);
+  }
+
+  @Put(':addressId/default')
+  async defaultAddress(
+    @Req() req: TokenUserIdType,
+    @Param('addressId') addressId: string,
+  ) {
+    const userId = req.user.sub;
+    console.log(req);
+
+    const address = await this.addressService.getAddress(userId, addressId);
+    console.log(address);
+
+    if (!address?.inUse){
+      return this.addressService.defaultAddress(userId, addressId);
+    } else {
+      return { message: 'Endereço já é o padrão' };
+    }
   }
 
   @Delete(':addressId')

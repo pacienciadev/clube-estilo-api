@@ -36,10 +36,10 @@ export class UserController {
 
     return {
       message: 'Usuário criado com sucesso.',
-      user: new UserListDTO(createdUser.id, createdUser.name),
       access_token: await this.jwtService.signAsync({
         sub: createdUser.id,
         userName: createdUser.name,
+        affiliation: createdUser.affiliation,
       }),
     };
   }
@@ -51,7 +51,23 @@ export class UserController {
 
     return {
       message: 'Usuários obtidos com sucesso.',
-      users: savedUsers.map((user) => new UserListDTO(user.id, user.name)),
+      users: savedUsers.map(
+        (user) =>
+          new UserListDTO(
+            user.id,
+            user.name,
+            user.email,
+            user.phone,
+            user.cpf,
+            user.birthDate,
+            user.gender,
+            user.addresses,
+            user.affiliation,
+            user.createdAt,
+            user.updatedAt,
+            user.deletedAt,
+          ),
+      ),
     };
   }
 
@@ -60,7 +76,20 @@ export class UserController {
   async userDetails(@Param('id') id: string) {
     const user = await this.userService.searchById(id);
 
-    return new UserListDTO(user.id, user.name);
+    return new UserListDTO(
+      user.id,
+      user.name,
+      user.email,
+      user.phone,
+      user.cpf,
+      user.birthDate,
+      user.gender,
+      user.addresses,
+      user.affiliation,
+      user.createdAt,
+      user.updatedAt,
+      user.deletedAt,
+    );
   }
 
   @Put('/:id')

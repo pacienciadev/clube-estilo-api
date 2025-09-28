@@ -12,6 +12,7 @@ import { Exclude } from 'class-transformer';
 
 import { OrderEntity } from '../order/order.entity';
 import { AddressEntity } from '../address/address.entity';
+import { UserAffiliationEnum } from './enums/user.enum';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -28,11 +29,14 @@ export class UserEntity {
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
 
+  @Column({ name: 'cpf', length: 11, nullable: true, unique: true })
+  cpf: string;
+
   @Column({ name: 'phone', length: 15, nullable: true })
   phone: string;
 
-  @Column({ name: 'bornDate', type: 'date', nullable: true })
-  bornDate: Date;
+  @Column({ name: 'birthDate', type: 'date', nullable: true })
+  birthDate: Date;
 
   @Column({
     name: 'gender',
@@ -45,16 +49,10 @@ export class UserEntity {
   @Column({
     name: 'affiliation',
     type: 'enum',
-    enum: [
-      'USER',
-      'CE_ADMIN',
-      'SERVICE_PROVIDER',
-      'SUPER_ADMIN',
-      'SERVICE_PROVIDER_MANAGER',
-    ],
-    default: 'USER',
+    enum: UserAffiliationEnum,
+    default: UserAffiliationEnum.USER,
   })
-  affiliation: string;
+  affiliation: UserAffiliationEnum;
 
   @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user, {
     cascade: true,

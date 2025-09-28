@@ -26,9 +26,13 @@ export class AuthService {
       throw new UnauthorizedException('O email ou a senha está incorreto.');
     }
 
-    const payload: UserPayload = {
-      sub: user.id, // sub = subject
+    const payload = {
+      sub: user.id, // sub === subject = id
       userName: user.name,
+      affiliation: user.affiliation,
+      addresses: user.addresses,
+      orders: user.orders,
+      updatedAt: user.updatedAt,
     };
 
     return {
