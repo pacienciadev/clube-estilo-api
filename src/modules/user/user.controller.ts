@@ -40,6 +40,7 @@ export class UserController {
         sub: createdUser.id,
         userName: createdUser.name,
         affiliation: createdUser.affiliation,
+        status: createdUser.status,
       }),
     };
   }

@@ -69,7 +69,7 @@ export class AddressController {
     const address = await this.addressService.getAddress(userId, addressId);
     console.log(address);
 
-    if (!address?.inUse){
+    if (!address?.inUse) {
       return this.addressService.defaultAddress(userId, addressId);
     } else {
       return { message: 'Endereço já é o padrão' };
@@ -86,4 +86,3 @@ export class AddressController {
     return this.addressService.deleteAddress(userId, addressId);
   }
 }
-

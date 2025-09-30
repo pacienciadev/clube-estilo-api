@@ -5,3 +5,16 @@ export enum UserAffiliationEnum {
   SUPER_ADMIN = 'SUPER_ADMIN',
   SERVICE_PROVIDER_MANAGER = 'SERVICE_PROVIDER_MANAGER',
 }
+
+export enum UserGenderEnum {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
+
+export enum UserStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  PENDING = 'PENDING',
+}

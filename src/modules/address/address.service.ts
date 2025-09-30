@@ -83,10 +83,7 @@ export class AddressService {
     await this.addressRepository.remove(address);
   }
 
-  async defaultAddress(
-    userId: string,
-    addressId: string,
-  ) {
+  async defaultAddress(userId: string, addressId: string) {
     const user = await this.findUser(userId);
 
     const updateResult = await this.addressRepository.update(

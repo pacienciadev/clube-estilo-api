@@ -77,18 +77,6 @@ export class UserService {
     return user;
   }
 
-  async searchByCPF(cpf: string) {
-    console.log(cpf);
-
-    const user = await this.userRepository.findOne({
-      where: { cpf },
-    });
-
-    if (user === null) throw new NotFoundException('O CPF não foi encontrado.');
-
-    return user;
-  }
-
   async updateUser(id: string, newData: UpdateUserDTO) {
     const user = await this.userRepository.findOneBy({ id });
 
