@@ -8,7 +8,7 @@ export class UserListDTO {
     readonly email: string,
     readonly phone: string,
     readonly cpf: string,
-    readonly birthDate: Date,
+    readonly birthDate: string,
     readonly gender: string,
     readonly addresses: AddressEntity[],
     readonly affiliation: UserAffiliationEnum,

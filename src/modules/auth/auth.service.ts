@@ -4,8 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from '../user/user.service';
 
-import { UserPayload } from './auth.interfaces';
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -14,7 +12,7 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string) {
-    const user = await this.userService.searchByEmail(email);
+    const user = await this.userService.searchByEmailHash(email);
 
     if (!user) {
       throw new UnauthorizedException('O email ou a senha está incorreto.');

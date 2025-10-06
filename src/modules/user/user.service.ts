@@ -5,41 +5,70 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
 import { UserListDTO } from './dto/user-list.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { CryptoService } from 'src/crypto/crypto.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly cryptoService: CryptoService,
   ) {}
 
-  async createUser(userData: CreateUserDTO) {
+  async createUser(user: CreateUserDTO) {
     const userEntity = new UserEntity();
 
-    Object.assign(userEntity, userData);
+    const encryptedEmail = this.cryptoService.encrypt(user.email);
+    const emailHash = this.cryptoService.createUniqueHash(user.email);
+    const encryptedCpf = this.cryptoService.encrypt(user.cpf);
+    const cpfHash = this.cryptoService.createUniqueHash(user.cpf);
+    const encryptedPhone = this.cryptoService.encrypt(user.phone);
+    const phoneHash = this.cryptoService.createUniqueHash(user.phone);
+    const encryptedBirthDate = this.cryptoService.encrypt(user.birthDate);
+    const encryptedGender = this.cryptoService.encrypt(user.gender);
+
+    Object.assign(userEntity, {
+      ...user,
+      encryptedEmail,
+      emailHash,
+      encryptedCpf,
+      cpfHash,
+      encryptedPhone,
+      phoneHash,
+      encryptedBirthDate,
+      encryptedGender,
+    });
 
     return this.userRepository.save(userEntity);
   }
 
   async usersList(): Promise<UserListDTO[]> {
     const users = await this.userRepository.find();
-    const userList: UserListDTO[] = users.map(
-      (user) =>
-        new UserListDTO(
-          user.id,
-          user.name,
-          user.email,
-          user.phone,
-          user.cpf,
-          user.birthDate,
-          user.gender,
-          user.addresses,
-          user.affiliation,
-          user.createdAt,
-          user.updatedAt,
-          user.deletedAt,
-        ),
-    );
+
+    const userList: UserListDTO[] = users.map((user) => {
+      const decryptEmail = this.cryptoService.decrypt(user.encryptedEmail);
+      const decryptedCpf = this.cryptoService.decrypt(user.encryptedCpf);
+      const decryptedPhone = this.cryptoService.decrypt(user.encryptedPhone);
+      const decryptedBirthDate = this.cryptoService.decrypt(
+        user.encryptedBirthDate,
+      );
+      const decryptedGender = this.cryptoService.decrypt(user.encryptedGender);
+
+      return new UserListDTO(
+        user.id,
+        user.name,
+        decryptEmail,
+        decryptedCpf,
+        decryptedPhone,
+        decryptedBirthDate,
+        decryptedGender,
+        user.addresses,
+        user.affiliation,
+        user.createdAt,
+        user.updatedAt,
+        user.deletedAt,
+      );
+    });
 
     return userList;
   }
@@ -55,20 +84,43 @@ export class UserService {
     return user;
   }
 
-  async searchByEmail(email: string) {
+  /**
+   * Busca um usuário pelo Hash do Email.
+   * Usado pelo HasUniqueEmailValidator e para buscas rápidas.
+   * @param emailPlaintext - O e-mail recebido (em texto simples) do DTO.
+   */
+  async searchByEmailHash(emailPlaintext: string) {
+    const emailHash = this.cryptoService.createUniqueHash(emailPlaintext);
+
     const user = await this.userRepository.findOne({
-      where: { email },
+      where: { emailHash },
     });
 
-    if (user === null)
-      throw new NotFoundException('O email não foi encontrado.');
+    if (user === null) {
+      // Retorna a exceção que o validador espera se o e-mail não for encontrado.
+      throw new NotFoundException('O e-mail não foi encontrado.');
+    }
 
     return user;
   }
 
-  async searchByCelphone(phone: string) {
+  async searchByCpfHash(cpf: string) {
+    const cpfHash = this.cryptoService.createUniqueHash(cpf);
+
     const user = await this.userRepository.findOne({
-      where: { phone },
+      where: { cpfHash },
+    });
+
+    if (user === null) throw new NotFoundException('O CPF não foi encontrado.');
+
+    return user;
+  }
+
+  async searchByPhoneHash(phone: string) {
+    const phoneHash = this.cryptoService.createUniqueHash(phone);
+
+    const user = await this.userRepository.findOne({
+      where: { phoneHash },
     });
 
     if (user === null)
@@ -85,7 +137,7 @@ export class UserService {
     if (user === null)
       throw new NotFoundException('O usuário não foi encontrado.');
 
-    Object.assign(user, newData as UserEntity);
+    Object.assign(user, newData);
 
     return this.userRepository.update(user.id, user);
   }

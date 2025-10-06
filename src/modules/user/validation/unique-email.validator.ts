@@ -7,20 +7,26 @@ import {
 } from 'class-validator';
 
 import { UserService } from '../user.service';
+import { CryptoService } from 'src/crypto/crypto.service'; 
 
 @Injectable()
 @ValidatorConstraint({ async: true })
-export class HasUniqueEmailValidator implements ValidatorConstraintInterface {
-  constructor(private userService: UserService) {}
+export class HasUniqueEmailHashValidator implements ValidatorConstraintInterface {
+  constructor(
+    private userService: UserService,
+    private cryptoService: CryptoService,
+  ) {}
 
   async validate(value: string): Promise<boolean> {
+    const emailHash = this.cryptoService.createUniqueHash(value); // Método que gera o SHA-256
+
     try {
-      const userHasEmail = await this.userService.searchByEmail(value);
+      const userHasEmail = await this.userService.searchByEmailHash(emailHash);
 
       return !userHasEmail;
     } catch (error) {
       if (error instanceof NotFoundException) {
-        return true;
+        return true; // É único!
       }
 
       throw error;
@@ -28,14 +34,14 @@ export class HasUniqueEmailValidator implements ValidatorConstraintInterface {
   }
 }
 
-export const HasUniqueEmail = (validationOptions: ValidationOptions) => {
+export const HasUniqueEmailHash = (validationOptions: ValidationOptions) => {
   return (object: object, property: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName: property,
       options: validationOptions,
       constraints: [],
-      validator: HasUniqueEmailValidator,
+      validator: HasUniqueEmailHashValidator,
     });
   };
 };

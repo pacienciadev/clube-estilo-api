@@ -6,6 +6,7 @@ import {
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
+  Index, // <-- Importante para o índice UNIQUE nos hashes
 } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
@@ -14,7 +15,6 @@ import { OrderEntity } from '../order/order.entity';
 import { AddressEntity } from '../address/address.entity';
 import {
   UserAffiliationEnum,
-  UserGenderEnum,
   UserStatusEnum,
 } from './enums/user.enum';
 
@@ -26,29 +26,87 @@ export class UserEntity {
   @Column({ name: 'name', length: 100, nullable: false })
   name: string;
 
-  @Column({ name: 'email', length: 70, nullable: false })
-  email: string;
-
   @Exclude()
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
+  
+  // =========================================================
+  // === DADOS SENSÍVEIS (AES-256 CRIPTOGRAFADO & HASH) ======
+  // =========================================================
 
-  @Column({ name: 'cpf', length: 11, nullable: true, unique: true })
+  // --- CPF ---
   cpf: string;
 
-  @Column({ name: 'phone', length: 15, nullable: true, unique: true })
-  phone: string;
-
-  @Column({ name: 'birthDate', type: 'date', nullable: true })
-  birthDate: Date;
-
   @Column({
-    name: 'gender',
-    type: 'enum',
-    enum: UserGenderEnum,
+    name: 'encrypted_cpf',
+    type: 'varchar',
+    length: 512,
     nullable: true,
   })
-  gender: UserGenderEnum;
+  encryptedCpf: string; // Valor AES-256 (reversível)
+
+  @Index({ unique: true })
+  @Column({ name: 'cpf_hash', type: 'char', length: 64, nullable: true })
+  cpfHash: string; // Hash SHA-256 (unicidade)
+
+  // --- E-MAIL ---
+  email: string;
+
+  @Column({
+    name: 'encrypted_email',
+    type: 'varchar',
+    length: 512,
+    nullable: true,
+  })
+  encryptedEmail: string; // Valor AES-256 (reversível)
+
+  @Index({ unique: true })
+  @Column({ name: 'email_hash', type: 'char', length: 64, nullable: false })
+  emailHash: string; // Hash SHA-256 (unicidade)
+
+  phone: string;
+
+  @Column({
+    name: 'encrypted_phone',
+    type: 'varchar',
+    length: 512,
+    nullable: true,
+  })
+  encryptedPhone: string; // Valor AES-256 (reversível)
+
+  @Index({ unique: true })
+  @Column({ name: 'phone_hash', type: 'char', length: 64, nullable: true })
+  phoneHash: string; // Hash SHA-256 (unicidade)
+
+  // --- DATA DE NASCIMENTO ---
+  birthDate: string;
+
+  @Column({
+    name: 'encrypted_birthDate',
+    type: 'varchar',
+    length: 512,
+    nullable: true,
+  })
+  encryptedBirthDate: string;
+
+  @Column({
+    name: 'encrypted_gender',
+    type: 'varchar',
+    length: 512,
+    nullable: true,
+  })
+  encryptedGender: string;
+
+  // =========================================================
+  // === DADOS ADICIONAIS (Manter inalterado) ================
+  // =========================================================
+
+  // --- FILIAÇÃO ---
+  // Define o nível de permissão do usuário na plataforma.
+  // Ex.: USER, ADMIN, SUPER_ADMIN
+  // O valor padrão é 'USER' para todos os novos cadastros.
+  // Apenas um usuário com permissão 'SUPER_ADMIN' pode alterar este valor.
+  // Apenas usuários com permissão 'ADMIN' ou 'SUPER_ADMIN' podem visualizar este valor.
 
   @Column({
     name: 'affiliation',
@@ -65,6 +123,10 @@ export class UserEntity {
     default: UserStatusEnum.PENDING,
   })
   status: UserStatusEnum;
+
+  // =========================================================
+  // === RELAÇÕES E METADADOS (Manter inalterado) ============
+  // =========================================================
 
   @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user, {
     cascade: true,
