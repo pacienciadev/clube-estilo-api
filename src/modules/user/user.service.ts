@@ -64,6 +64,7 @@ export class UserService {
         decryptedGender,
         user.addresses,
         user.affiliation,
+        user.status,
         user.createdAt,
         user.updatedAt,
         user.deletedAt,

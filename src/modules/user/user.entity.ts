@@ -29,7 +29,7 @@ export class UserEntity {
   @Exclude()
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
-  
+
   // =========================================================
   // === DADOS SENSÍVEIS (AES-256 CRIPTOGRAFADO & HASH) ======
   // =========================================================
@@ -96,10 +96,6 @@ export class UserEntity {
     nullable: true,
   })
   encryptedGender: string;
-
-  // =========================================================
-  // === DADOS ADICIONAIS (Manter inalterado) ================
-  // =========================================================
 
   // --- FILIAÇÃO ---
   // Define o nível de permissão do usuário na plataforma.

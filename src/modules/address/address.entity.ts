@@ -31,6 +31,12 @@ export class AddressEntity {
   @Column({ name: 'country', length: 100, nullable: false })
   country: string;
 
+  @Column({ name: 'lat', length: 10, nullable: true })
+  lat: string;
+
+  @Column({ name: 'lng', length: 10, nullable: true })
+  lng: string;
+
   @Column({ name: 'inUse', nullable: false })
   inUse: boolean;
 

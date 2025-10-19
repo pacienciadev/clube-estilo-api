@@ -28,6 +28,7 @@ export class AuthService {
       sub: user.id, // sub === subject = id
       userName: user.name,
       affiliation: user.affiliation,
+      status: user.status,
       addresses: user.addresses,
       orders: user.orders,
       updatedAt: user.updatedAt,

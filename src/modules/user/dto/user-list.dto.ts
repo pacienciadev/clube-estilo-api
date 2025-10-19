@@ -1,5 +1,5 @@
 import { AddressEntity } from 'src/modules/address/address.entity';
-import { UserAffiliationEnum } from '../enums/user.enum';
+import { UserAffiliationEnum, UserStatusEnum } from '../enums/user.enum';
 
 export class UserListDTO {
   constructor(
@@ -12,6 +12,7 @@ export class UserListDTO {
     readonly gender: string,
     readonly addresses: AddressEntity[],
     readonly affiliation: UserAffiliationEnum,
+    readonly status: UserStatusEnum,
     readonly createdAt: string,
     readonly updatedAt: string,
     readonly deletedAt: string,

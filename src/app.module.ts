@@ -19,6 +19,7 @@ import { ProductModule } from './modules/product/product.module';
 import { GlobalExceptionFilter } from './utils/filters/global-exception-filter';
 import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.interceptor';
 import { AddressModule } from './modules/address/address.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AddressModule } from './modules/address/address.module';
     AuthModule,
     UserModule,
     AddressModule,
+    ScheduleModule,
     OrderModule,
     ProductModule,
   ],

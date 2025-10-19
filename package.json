@@ -19,9 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "tsx -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/db/data-source-cli.ts",
-    "docker:update:api": "docker-compose down clube-estilo-api && docker-compose up clube-estilo-api -d --build",
     "dev:build": "nest build && npm run migration:generate",
-    "migration:generate": "npm run typeorm migration:generate src/db/migrations/lgpd-adjustments -p",
+    "docker:update:api": "docker-compose down clube-estilo-api && docker-compose up clube-estilo-api -d --build",
+    "migration:generate": "npm run typeorm migration:generate src/db/migrations/migration -p",
     "migration:run": "npm run typeorm migration:run",
     "migration:revert": "npm run typeorm migration:revert"
   },
