@@ -8,7 +8,7 @@ import {
 import { HasUniqueEmailHash } from '../validation/unique-email.validator';
 import { UserGenderEnum } from '../enums/user.enum';
 
-export class CreateUserDTO {
+export class UserCreateDTO {
   @IsNotEmpty({ message: 'O nome não pode ser vazio' })
   name: string;
 

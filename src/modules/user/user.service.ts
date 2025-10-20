@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { CreateUserDTO } from './dto/create-user.dto';
+import { UserCreateDTO } from './dto/user-create.dto';
 import { Repository } from 'typeorm';
 import { UserListDTO } from './dto/user-list.dto';
-import { UpdateUserDTO } from './dto/update-user.dto';
+import { UserUpdateDTO } from './dto/user-update.dto';
 import { CryptoService } from 'src/crypto/crypto.service';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class UserService {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async createUser(user: CreateUserDTO) {
+  async createUser(user: UserCreateDTO) {
     const userEntity = new UserEntity();
 
     const encryptedEmail = this.cryptoService.encrypt(user.email);
@@ -130,7 +130,7 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: string, newData: UpdateUserDTO) {
+  async updateUser(id: string, newData: UserUpdateDTO) {
     const user = await this.userRepository.findOneBy({ id });
 
     console.log(' UserService | updateUser | user:', user);

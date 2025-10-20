@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
-import { CreateUserDTO } from './dto/create-user.dto';
+import { UserCreateDTO } from './dto/user-create.dto';
 import { UserListDTO } from './dto/user-list.dto';
 import { HashPasswordPipe } from 'src/pipes/password-hash-transform.pipe';
-import { UpdateUserDTO } from './dto/update-user.dto';
+import { UserUpdateDTO } from './dto/user-update.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 
@@ -26,7 +26,7 @@ export class UserController {
 
   @Post()
   async criaUsuario(
-    @Body() userData: CreateUserDTO,
+    @Body() userData: UserCreateDTO,
     @Body('password', HashPasswordPipe) hashedPassword: string,
   ) {
     const createdUser = await this.userService.createUser({
@@ -97,7 +97,7 @@ export class UserController {
 
   @Put('/:id')
   @UseGuards(AuthGuard)
-  async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
+  async updateUser(@Param('id') id: string, @Body() newData: UserUpdateDTO) {
     const updatedUser = await this.userService.updateUser(id, newData);
 
     return {

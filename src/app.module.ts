@@ -20,6 +20,7 @@ import { GlobalExceptionFilter } from './utils/filters/global-exception-filter';
 import { LoggerGlobalInterceptor } from './utils/interceptors/logger-global.interceptor';
 import { AddressModule } from './modules/address/address.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
+import { EstablishmentModule } from './modules/establishment/establishment.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
       inject: [PostgresConfigService],
     }),
     AuthModule,
+    EstablishmentModule,
     UserModule,
     AddressModule,
     ScheduleModule,
