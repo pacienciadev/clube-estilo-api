@@ -4,11 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { JwtService } from '@nestjs/jwt';
 
 import { Request } from 'express';
 
-import { UserPayload, UserRequest } from './auth.interfaces';
+import { UserPayload, UserRequest } from 'src/modules/auth/auth.interfaces';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

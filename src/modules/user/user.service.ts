@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { UserCreateDTO } from './dto/user-create.dto';
@@ -6,6 +11,7 @@ import { Repository } from 'typeorm';
 import { UserListDTO } from './dto/user-list.dto';
 import { UserUpdateDTO } from './dto/user-update.dto';
 import { CryptoService } from 'src/crypto/crypto.service';
+import { UserStatusEnum } from './enums/user.enum';
 
 @Injectable()
 export class UserService {
@@ -26,6 +32,39 @@ export class UserService {
     const phoneHash = this.cryptoService.createUniqueHash(user.phone);
     const encryptedBirthDate = this.cryptoService.encrypt(user.birthDate);
     const encryptedGender = this.cryptoService.encrypt(user.gender);
+
+    const userExists = await this.userRepository.findOne({
+      where: { emailHash },
+    });
+
+    if (userExists) {
+      throw new ConflictException({
+        message: 'Este e-mail já está em uso.',
+        errorCode: 'EMAIL_IN_USE',
+      });
+    }
+
+    const cpfExists = await this.userRepository.findOne({
+      where: { cpfHash },
+    });
+
+    if (cpfExists) {
+      throw new ConflictException({
+        message: 'Este CPF já está em uso.',
+        errorCode: 'CPF_IN_USE',
+      });
+    }
+
+    const phoneExists = await this.userRepository.findOne({
+      where: { phoneHash },
+    });
+
+    if (phoneExists) {
+      throw new ConflictException({
+        message: 'Este telefone já está em uso.',
+        errorCode: 'PHONE_IN_USE',
+      });
+    }
 
     Object.assign(userEntity, {
       ...user,
@@ -153,5 +192,18 @@ export class UserService {
     await this.userRepository.delete(user.id);
 
     return user;
+  }
+
+  pendingUsersList(): Promise<UserEntity[]> {
+    return this.userRepository.find({
+      where: { status: UserStatusEnum.PENDING },
+    });
+  }
+
+  approveUser(id: string): Promise<UserEntity> {
+    return this.userRepository.save({
+      id,
+      status: UserStatusEnum.ACTIVE,
+    });
   }
 }

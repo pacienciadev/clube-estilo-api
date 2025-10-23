@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 import { ProductService } from './product.service';
-import { CreateProductDTO } from './dto/create-product.dto';
+import { ProductCreateDTO } from './dto/product-create.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
 
 @Controller('produtos')
@@ -17,7 +17,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  async create(@Body() productData: CreateProductDTO) {
+  async create(@Body() productData: ProductCreateDTO) {
     const createdProduct = await this.productService.createProduct(productData);
 
     return {

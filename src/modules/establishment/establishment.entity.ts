@@ -13,28 +13,28 @@ export class EstablishmentEntity {
   id: string;
 
   @Column({ name: 'establishment_name', nullable: false })
-  establishment_name: string;
+  establishmentName: string;
 
   @Column({ name: 'establishment_email', nullable: false })
-  establishment_email: string;
+  establishmentEmail: string;
 
   @Column({ name: 'establishment_address', nullable: false })
-  establishment_address: string;
+  establishmentAddress: string;
 
   @Column({ name: 'establishment_document', nullable: false })
-  establishment_document: string;
+  establishmentDocument: string;
 
   @Column({ name: 'membership_type', nullable: false })
-  membership_type: string;
+  membershipType: string;
 
   @Column({ name: 'monthly_fee', type: 'decimal', nullable: false })
-  monthly_fee: number;
+  monthlyFee: number;
 
   @Column({ name: 'establishment_description', nullable: false })
-  establishment_description: string;
+  establishmentDescription: string;
 
   @Column({ name: 'establishment_services', type: 'simple-array', nullable: false })
-  establishment_services: string[];
+  establishmentServices: string[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

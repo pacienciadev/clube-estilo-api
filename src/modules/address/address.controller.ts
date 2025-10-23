@@ -14,7 +14,9 @@ import { AddressService } from './address.service';
 
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { AuthGuard } from '../auth/auth.guard';
+
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+
 import { TokenUserIdType } from 'src/types';
 
 @UseGuards(AuthGuard)
@@ -64,10 +66,10 @@ export class AddressController {
     @Param('addressId') addressId: string,
   ) {
     const userId = req.user.sub;
-    console.log(req);
+    console.log('Request:', req);
 
     const address = await this.addressService.getAddress(userId, addressId);
-    console.log(address);
+    console.log('Address:', address);
 
     if (!address?.inUse) {
       return this.addressService.defaultAddress(userId, addressId);

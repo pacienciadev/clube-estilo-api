@@ -9,11 +9,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { AuthGuard } from '../auth/auth.guard';
-
 import { CreateScheduleDTO } from './dto/schedule-create.dto';
 
 import { ScheduleService } from './schedule.service';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('/schedules')

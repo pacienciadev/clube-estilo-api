@@ -15,6 +15,7 @@ import { OrderEntity } from '../order/order.entity';
 import { AddressEntity } from '../address/address.entity';
 import {
   UserAffiliationEnum,
+  UserGenderEnum,
   UserStatusEnum,
 } from './enums/user.enum';
 
@@ -88,6 +89,8 @@ export class UserEntity {
     nullable: true,
   })
   encryptedBirthDate: string;
+
+  gender: UserGenderEnum;
 
   @Column({
     name: 'encrypted_gender',

@@ -11,11 +11,11 @@ import {
 
 import { OrderService } from './order.service';
 
-import { AuthGuard } from '../auth/auth.guard';
 import { UserRequest } from '../auth/auth.interfaces';
 
 import { CreateOrderDTO } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('orders')

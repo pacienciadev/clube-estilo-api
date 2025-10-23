@@ -9,11 +9,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { AuthGuard } from '../auth/auth.guard';
-
 import { EstablishmentCreateDTO } from './dto/establishment-create.dto';
 
 import { EstablishmentService } from './establishment.service';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('/establishments')

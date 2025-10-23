@@ -8,10 +8,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+
 import { AuthDTO } from './dto/auth.dto';
+
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { UserRequest } from './auth.interfaces';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
