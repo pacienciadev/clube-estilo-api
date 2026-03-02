@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
+import { Role } from '../../modules/role/roles.decorator';
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -13,4 +15,7 @@ export class User {
 
   @Column()
   isActive: boolean;
+
+  @Column()
+  role: Role;
 }
