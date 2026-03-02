@@ -95,15 +95,16 @@ export class UserService {
 
       return new UserListDTO(
         user.id,
-        user.name,
+        user.firstName,
+        user.lastName,
         decryptEmail,
         decryptedCpf,
         decryptedPhone,
         decryptedBirthDate,
         decryptedGender,
         user.addresses,
-        user.affiliation,
         user.status,
+        user.role,
         user.createdAt,
         user.updatedAt,
         user.deletedAt,

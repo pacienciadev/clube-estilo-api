@@ -1,9 +1,4 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsPhoneNumber,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsPhoneNumber, MinLength } from 'class-validator';
 
 import { HasUniqueEmailHash } from '../validation/unique-email.validator';
 import { UserGenderEnum } from '../enums/user.enum';

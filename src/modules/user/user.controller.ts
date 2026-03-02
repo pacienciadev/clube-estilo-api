@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
+import { Role, Roles } from '../role/roles.decorator';
+import { RolesGuard } from '../role/roles.guard';
 
 import { UserService } from './user.service';
 
@@ -20,9 +22,6 @@ import { UserUpdateDTO } from './dto/user-update.dto';
 import { HashPasswordPipe } from 'src/pipes/password-hash-transform.pipe';
 
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { UserAffiliationEnum } from './enums/user.enum';
 
 @Controller('/users')
 export class UserController {
@@ -43,17 +42,88 @@ export class UserController {
 
     return {
       message: 'Usuário criado com sucesso.',
+      user: new UserListDTO(
+        createdUser.id,
+        createdUser.firstName,
+        createdUser.lastName,
+        createdUser.email,
+        createdUser.phone,
+        createdUser.cpf,
+        createdUser.birthDate,
+        createdUser.gender,
+        createdUser.addresses,
+        createdUser.status,
+        createdUser.role,
+        createdUser.createdAt,
+        createdUser.updatedAt,
+        createdUser.deletedAt,
+      ),
       access_token: await this.jwtService.signAsync({
         sub: createdUser.id,
-        userName: createdUser.name,
-        affiliation: createdUser.affiliation,
+        userName: `${createdUser.firstName} ${createdUser.lastName}`,
         status: createdUser.status,
+        role: createdUser.role,
       }),
     };
   }
 
+  @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async usersList() {
+    const savedUsers = await this.userService.usersList();
+
+    return {
+      message: 'Usuários obtidos com sucesso.',
+      users: savedUsers.map(
+        (user) =>
+          new UserListDTO(
+            user.id,
+            user.firstName,
+            user.lastName,
+            user.email,
+            user.cpf,
+            user.phone,
+            user.birthDate,
+            user.gender,
+            user.addresses,
+            user.status,
+            user.role,
+            user.createdAt,
+            user.updatedAt,
+            user.deletedAt,
+          ),
+      ),
+    };
+  }
+
+  @Get('/:id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async userDetails(@Param('id') id: string) {
+    const user = await this.userService.searchById(id);
+
+    return new UserListDTO(
+      user.id,
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.cpf,
+      user.phone,
+      user.birthDate,
+      user.gender,
+      user.addresses,
+      user.status,
+      user.role,
+      user.createdAt,
+      user.updatedAt,
+      user.deletedAt,
+    );
+  }
+
   @Put('/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async updateUser(@Param('id') id: string, @Body() newData: UserUpdateDTO) {
     const updatedUser = await this.userService.updateUser(id, newData);
 
@@ -64,7 +134,8 @@ export class UserController {
   }
 
   @Delete('/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async removeUser(@Param('id') id: string) {
     const removedUser = await this.userService.deleteUser(id);
 
@@ -75,8 +146,8 @@ export class UserController {
   }
 }
 
-@Roles(UserAffiliationEnum.SUPER_ADMIN, UserAffiliationEnum.CE_ADMIN)
 @UseGuards(AuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 @Controller('/admin/users')
 export class AdminUserController {
   constructor(private userService: UserService) {}
@@ -89,15 +160,16 @@ export class AdminUserController {
       (user) =>
         new UserListDTO(
           user.id,
-          user.name,
+          user.firstName,
+          user.lastName,
           user.email,
           user.phone,
           user.cpf,
           user.birthDate,
           user.gender,
           user.addresses,
-          user.affiliation,
           user.status,
+          user.role,
           user.createdAt,
           user.updatedAt,
           user.deletedAt,
@@ -112,15 +184,16 @@ export class AdminUserController {
 
     return new UserListDTO(
       user.id,
-      user.name,
-      user.encryptedEmail,
-      user.encryptedPhone,
-      user.encryptedCpf,
-      user.encryptedBirthDate,
-      user.encryptedGender,
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.cpf,
+      user.phone,
+      user.birthDate,
+      user.gender,
       user.addresses,
-      user.affiliation,
       user.status,
+      user.role,
       user.createdAt,
       user.updatedAt,
       user.deletedAt,

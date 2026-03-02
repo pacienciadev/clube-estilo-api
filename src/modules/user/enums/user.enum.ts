@@ -1,11 +1,3 @@
-export enum UserAffiliationEnum {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  CE_ADMIN = 'CE_ADMIN',
-  USER = 'USER',
-  SERVICE_PROVIDER = 'SERVICE_PROVIDER',
-  SERVICE_PROVIDER_MANAGER = 'SERVICE_PROVIDER_MANAGER',
-}
-
 export enum UserGenderEnum {
   MALE = 'MALE',
   FEMALE = 'FEMALE',

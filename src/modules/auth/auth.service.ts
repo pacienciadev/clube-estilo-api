@@ -4,6 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from '../user/user.service';
 
+import { UserPayload } from './auth.interfaces';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,14 +26,14 @@ export class AuthService {
       throw new UnauthorizedException('O email ou a senha está incorreto.');
     }
 
-    const payload = {
+    const payload: UserPayload = {
       sub: user.id, // sub === subject = id
-      userName: user.name,
-      affiliation: user.affiliation,
-      status: user.status,
+      userName: `${user.firstName} ${user.lastName}`,
       addresses: user.addresses,
       orders: user.orders,
       updatedAt: user.updatedAt,
+      status: user.status,
+      role: user.role,
     };
 
     return {

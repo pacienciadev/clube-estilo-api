@@ -13,19 +13,23 @@ import { Exclude } from 'class-transformer';
 
 import { OrderEntity } from '../order/order.entity';
 import { AddressEntity } from '../address/address.entity';
-import {
-  UserAffiliationEnum,
-  UserGenderEnum,
-  UserStatusEnum,
-} from './enums/user.enum';
+import { UserGenderEnum, UserStatusEnum } from './enums/user.enum';
+
+import { Role } from 'src/modules/role/roles.decorator';
 
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'name', length: 100, nullable: false })
-  name: string;
+  @Column({ name: 'firstName', length: 100, nullable: false })
+  firstName: string;
+
+  @Column({ name: 'lastName', length: 100, nullable: false })
+  lastName: string;
+
+  @Column({ name: 'role', type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 
   @Exclude()
   @Column({ name: 'password', length: 255, nullable: false })
@@ -100,21 +104,6 @@ export class UserEntity {
   })
   encryptedGender: string;
 
-  // --- FILIAÇÃO ---
-  // Define o nível de permissão do usuário na plataforma.
-  // Ex.: USER, ADMIN, SUPER_ADMIN
-  // O valor padrão é 'USER' para todos os novos cadastros.
-  // Apenas um usuário com permissão 'SUPER_ADMIN' pode alterar este valor.
-  // Apenas usuários com permissão 'ADMIN' ou 'SUPER_ADMIN' podem visualizar este valor.
-
-  @Column({
-    name: 'affiliation',
-    type: 'enum',
-    enum: UserAffiliationEnum,
-    default: UserAffiliationEnum.USER,
-  })
-  affiliation: UserAffiliationEnum;
-
   @Column({
     name: 'status',
     type: 'enum',
@@ -122,10 +111,6 @@ export class UserEntity {
     default: UserStatusEnum.PENDING,
   })
   status: UserStatusEnum;
-
-  // =========================================================
-  // === RELAÇÕES E METADADOS (Manter inalterado) ============
-  // =========================================================
 
   @OneToMany(() => AddressEntity, (address: AddressEntity) => address.user, {
     cascade: true,
