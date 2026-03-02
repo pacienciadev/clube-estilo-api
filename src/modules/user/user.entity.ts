@@ -13,16 +13,24 @@ import { Exclude } from 'class-transformer';
 import { OrderEntity } from '../order/order.entity';
 import { AddressEntity } from '../address/address.entity';
 
+import { Role } from 'src/modules/role/roles.decorator';
+
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'name', length: 100, nullable: false })
-  name: string;
+  @Column({ name: 'firstName', length: 100, nullable: false })
+  firstName: string;
+
+  @Column({ name: 'lastName', length: 100, nullable: false })
+  lastName: string;
 
   @Column({ name: 'email', length: 70, nullable: false })
   email: string;
+
+  @Column({ name: 'role', nullable: false })
+  role: Role;
 
   @Exclude()
   @Column({ name: 'password', length: 255, nullable: false })

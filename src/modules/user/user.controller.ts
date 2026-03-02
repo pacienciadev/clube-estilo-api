@@ -16,6 +16,8 @@ import { HashPasswordPipe } from 'src/pipes/password-hash-transform.pipe';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { Role, Roles } from '../role/roles.decorator';
+import { RolesGuard } from '../role/roles.guard';
 
 @Controller('/users')
 export class UserController {
@@ -36,35 +38,44 @@ export class UserController {
 
     return {
       message: 'Usuário criado com sucesso.',
-      user: new UserListDTO(createdUser.id, createdUser.name),
+      user: new UserListDTO(
+        createdUser.id,
+        createdUser.firstName,
+        createdUser.lastName,
+      ),
       access_token: await this.jwtService.signAsync({
         sub: createdUser.id,
-        userName: createdUser.name,
+        userName: `${createdUser.firstName} ${createdUser.lastName}`,
       }),
     };
   }
 
   @Get()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async usersList() {
     const savedUsers = await this.userService.usersList();
 
     return {
       message: 'Usuários obtidos com sucesso.',
-      users: savedUsers.map((user) => new UserListDTO(user.id, user.name)),
+      users: savedUsers.map(
+        (user) => new UserListDTO(user.id, user.firstName, user.lastName),
+      ),
     };
   }
 
   @Get('/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async userDetails(@Param('id') id: string) {
     const user = await this.userService.searchById(id);
 
-    return new UserListDTO(user.id, user.name);
+    return new UserListDTO(user.id, user.firstName, user.lastName);
   }
 
   @Put('/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async updateUser(@Param('id') id: string, @Body() newData: UpdateUserDTO) {
     const updatedUser = await this.userService.updateUser(id, newData);
 
@@ -75,7 +86,8 @@ export class UserController {
   }
 
   @Delete('/:id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async removeUser(@Param('id') id: string) {
     const removedUser = await this.userService.deleteUser(id);
 
